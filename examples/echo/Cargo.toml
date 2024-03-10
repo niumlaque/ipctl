@@ -1,0 +1,9 @@
+[package]
+name = "echo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ipctl = { path = "../../ipctl" }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+

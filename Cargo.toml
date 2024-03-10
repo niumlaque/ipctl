@@ -1,0 +1,8 @@
+[workspace]
+members = ["ipctl", "ipctl-proto", "examples/*"]
+resolver = "2"
+
+[profile.release]
+strip = true
+lto = true
+
