@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package ipctl;
+
+message Request {
+    string value = 1;
+}
+
+message Response {
+    string value = 1;
+}
+
+service Control {
+    rpc call(Request) returns (Response) {}
+}

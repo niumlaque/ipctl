@@ -1,0 +1,7 @@
+[package]
+name = "ipctl-proto"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+tonic-build = "0.11"
