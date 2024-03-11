@@ -17,14 +17,14 @@ use tonic::{Request, Response};
 ///         .unwrap();
 /// }
 /// ```
-pub struct Server {
+pub struct Server<F: Fn(&str) -> String + 'static + Send + Sync> {
     /// The function called then receiving a value.
-    callback: fn(&str) -> String,
+    callback: F,
 }
 
-impl Server {
+impl<F: Fn(&str) -> String + 'static + Send + Sync> Server<F> {
     /// Create a new `Server` with a callback function.
-    pub fn new(callback: fn(&str) -> String) -> Self {
+    pub fn new(callback: F) -> Self {
         Self { callback }
     }
 
@@ -40,12 +40,12 @@ impl Server {
     }
 }
 
-struct Inner {
-    callback: fn(&str) -> String,
+struct Inner<F: Fn(&str) -> String + 'static + Send + Sync> {
+    callback: F,
 }
 
 #[tonic::async_trait]
-impl crate::Control for Inner {
+impl<F: Fn(&str) -> String + 'static + Send + Sync> crate::Control for Inner<F> {
     async fn call(
         &self,
         req: Request<crate::Request>,
