@@ -1,0 +1,10 @@
+[package]
+name = "tracing-loglevel"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ipctl = { path = "../../ipctl" }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
