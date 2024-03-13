@@ -1,4 +1,5 @@
 use crate::error::Result;
+use std::future::Future;
 use std::net::SocketAddr;
 use tonic::{Request, Response};
 
@@ -36,6 +37,22 @@ impl<F: Fn(&str) -> String + 'static + Send + Sync> Server<F> {
                 callback: self.callback,
             }))
             .serve(addr)
+            .await?)
+    }
+
+    /// Listens for incoming connections and
+    /// prepares the receiver-side program to accept commands from other applications.
+    /// Stops waiting upon receiving a signal.
+    pub async fn serve_with_signal<Signal: Future<Output = ()>>(
+        self,
+        addr: SocketAddr,
+        signal: Signal,
+    ) -> Result<()> {
+        Ok(tonic::transport::Server::builder()
+            .add_service(crate::ControlServer::new(Inner {
+                callback: self.callback,
+            }))
+            .serve_with_shutdown(addr, signal)
             .await?)
     }
 }

@@ -21,6 +21,7 @@ async fn main() {
         .with(fmt::Layer::default())
         .init();
 
+    let (tx, rx) = tokio::sync::oneshot::channel::<()>();
     let ipctl_handler = tokio::spawn(async {
         let addr = "127.0.0.1:60001".parse().unwrap();
         ipctl::Server::new(move |x: &str| {
@@ -31,7 +32,9 @@ async fn main() {
                 format!("Failed to convert {x} to log level")
             }
         })
-        .serve(addr)
+        .serve_with_signal(addr, async {
+            let _ = rx.await;
+        })
         .await
     });
 
@@ -44,8 +47,6 @@ async fn main() {
         thread::sleep(Duration::from_secs(5));
     }
 
-    // TODO: Stop ipctl server
-    // How can I gracefully shutdown a tonic server?
-
+    tx.send(()).unwrap();
     ipctl_handler.await.unwrap().unwrap();
 }

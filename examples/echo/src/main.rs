@@ -1,6 +1,6 @@
 /// First, start the sample echo-server with the following command:
 /// ```sh
-/// $ cargo run --example echo
+/// $ cargo run --bin echo
 /// ```
 /// Then, send a message from ipctl:
 /// ```sh
