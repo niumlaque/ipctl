@@ -1,0 +1,11 @@
+[package]
+name = "with-actix-web"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.5.1"
+ipctl = { path = "../../ipctl" }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
