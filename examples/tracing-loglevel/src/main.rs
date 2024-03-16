@@ -5,7 +5,7 @@ use tracing_subscriber::{filter, fmt, prelude::*, reload};
 
 /// First, start this sample with the following command:
 /// ```sh
-/// $ cargo run --run tracing-loglevel
+/// $ cargo run --bin tracing-loglevel
 /// ```
 /// Then, send a log level from ipctl:
 /// ```sh
