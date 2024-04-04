@@ -2,6 +2,8 @@
 #[derive(Debug)]
 pub enum Error {
     Tonic(tonic::transport::Error),
+    Channel,
+    JoinError(tokio::task::JoinError),
 }
 
 /// A specialized [`Result`] type for ipctl.
@@ -18,6 +20,8 @@ impl std::fmt::Display for Error {
         use self::Error::*;
         match self {
             Tonic(e) => e.fmt(f),
+            Channel => write!(f, "Failed to send data to channel"),
+            JoinError(e) => e.fmt(f),
         }
     }
 }

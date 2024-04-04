@@ -22,4 +22,6 @@ pub use proto::ipctl::control_client::ControlClient;
 pub use proto::ipctl::control_server::{Control, ControlServer};
 pub use proto::ipctl::Request;
 pub use proto::ipctl::Response;
+#[cfg(feature = "tokio")]
+pub use server::JoinHandler;
 pub use server::Server;
