@@ -21,22 +21,16 @@ async fn main() {
         .with(fmt::Layer::default())
         .init();
 
-    let (tx, rx) = tokio::sync::oneshot::channel::<()>();
-    let ipctl_handler = tokio::spawn(async {
-        let addr = "127.0.0.1:60001".parse().unwrap();
-        ipctl::Server::new(move |x: &str| {
-            if let Ok(level) = tracing::Level::from_str(x) {
-                reload_handle.modify(|y| *y = level.into()).unwrap();
-                format!("Log level is changed to {level}")
-            } else {
-                format!("Failed to convert {x} to log level")
-            }
-        })
-        .serve_with_signal(addr, async {
-            let _ = rx.await;
-        })
-        .await
-    });
+    let addr = "127.0.0.1:60001".parse().unwrap();
+    let handler = ipctl::Server::new(move |x: &str| {
+        if let Ok(level) = tracing::Level::from_str(x) {
+            reload_handle.modify(|y| *y = level.into()).unwrap();
+            format!("Log level is changed to {level}")
+        } else {
+            format!("Failed to convert {x} to log level")
+        }
+    })
+    .spawn_and_serve(addr);
 
     for _ in 0..10 {
         tracing::trace!("TRACE");
@@ -47,6 +41,5 @@ async fn main() {
         thread::sleep(Duration::from_secs(5));
     }
 
-    tx.send(()).unwrap();
-    ipctl_handler.await.unwrap().unwrap();
+    handler.join().await.unwrap();
 }
