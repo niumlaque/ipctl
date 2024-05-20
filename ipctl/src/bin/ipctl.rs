@@ -3,8 +3,9 @@ use clap::Parser;
 /// ipctl - Send commands to other applications through IPC.
 #[derive(Debug, Parser)]
 pub struct Cli {
-    /// The value to be sent to the ipctl server.
-    value: String,
+    /// The values to be sent to the ipctl server.
+    #[arg(value_delimiter = ' ')]
+    values: Vec<String>,
 
     /// Specify the destination for sending commands via communication.
     #[arg(
@@ -20,7 +21,9 @@ pub struct Cli {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     let mut client = ipctl::ControlClient::connect(cli.destination).await?;
-    let request = tonic::Request::new(ipctl::Request { value: cli.value });
+    let request = tonic::Request::new(ipctl::Request {
+        value: cli.values.join(" "),
+    });
     let response = client.call(request).await?;
     println!("{}", response.get_ref().value);
     Ok(())
