@@ -43,7 +43,7 @@ $ cargo run
 
 Afterwards, you can use the previously built ipctl Client for text communication.
 ```sh
-$ ipctl "Hello World"
+$ ipctl Hello World
 Received: Hello World
 ```
 

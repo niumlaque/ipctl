@@ -94,7 +94,7 @@ impl JoinHandler {
         // Sends shutdown signal to the Tokio thread.
         self.sender.send(()).map_err(|_| super::Error::Channel)?;
         // Waits until the Tokio thread stops.
-        self.inner.await.map_err(|e| super::Error::JoinError(e))??;
+        self.inner.await.map_err(super::Error::JoinError)??;
         Ok(())
     }
 }
